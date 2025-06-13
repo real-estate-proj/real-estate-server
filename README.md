@@ -49,7 +49,7 @@ access_token_exp_time=<access-token-expiry-time>
 ```
 
 ---
-## 8. Run Alembic Migrations
+## 5. Run Alembic Migrations
 
 ```bash
 alembic upgrade head
@@ -57,7 +57,7 @@ alembic upgrade head
 
 ---
 
-## 9. Start the FastAPI Server
+## 6. Start the FastAPI Server
 
 Navigate to the `src/` directory and run:
 
