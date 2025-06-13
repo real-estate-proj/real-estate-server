@@ -195,4 +195,3 @@ cython_debug/
 
 # testing file
 src/test
-src/models
