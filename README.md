@@ -1,20 +1,16 @@
-Dưới đây là phiên bản được viết lại của README với ngôn ngữ rõ ràng hơn, trình bày mạch lạc, dùng markdown chuẩn và chuyên nghiệp hơn:
 
 ---
 
-# 🛠️ FastAPI Project Setup Guide
-
-This guide will walk you through setting up the virtual environment, installing dependencies, configuring environment variables, running Alembic migrations, and starting the FastAPI server.
-
+🛠️ FastAPI Project Setup Guide
 ---
 
-## 📦 1. Initialize the Virtual Environment
+## 1. Initialize the Virtual Environment
 
 ```bash
 python -m venv <your-env-name>
 ```
 
-## ▶️ 2. Activate the Virtual Environment
+## 2. Activate the Virtual Environment
 
 ```bash
 <your-env-name>\Scripts\activate  # On Windows
@@ -22,11 +18,11 @@ python -m venv <your-env-name>
 source <your-env-name>/bin/activate  # On macOS/Linux
 ```
 
-> ⚠️ Ensure your Python interpreter is set to use the virtual environment you've just created.
+>  Ensure your Python interpreter is set to use the virtual environment you've just created.
 
 ---
 
-## 📚 3. Install Dependencies
+## 3. Install Dependencies
 
 ```bash
 cd src
@@ -36,7 +32,7 @@ cd ..
 
 ---
 
-## 🔐 4. Create `.env` File in `src/`
+## 4. Create `.env` File in `src/`
 
 Create a `.env` file inside the `src/` directory and populate it with your environment variables:
 
@@ -54,7 +50,7 @@ access_token_exp_time=<access-token-expiry-time>
 
 ---
 
-## 🔧 5. Initialize Alembic
+## 5. Initialize Alembic
 
 ```bash
 alembic init migration
@@ -64,7 +60,7 @@ This will create a `migration/` directory containing Alembic configuration files
 
 ---
 
-## ⚙️ 6. Configure `alembic.ini`
+## 6. Configure `alembic.ini`
 
 Open `alembic.ini` and clear the default URL line:
 
@@ -72,11 +68,11 @@ Open `alembic.ini` and clear the default URL line:
 sqlalchemy.url =
 ```
 
-> 💡 You can also paste the full DB connection string here if you prefer not to load from the `.env`.
+>  You can also paste the full DB connection string here if you prefer not to load from the `.env`.
 
 ---
 
-## 🧬 7. Configure `env.py` inside `migration/`
+## 7. Configure `env.py` inside `migration/`
 
 Edit the `env.py` file to load the database connection dynamically and import metadata:
 
@@ -96,7 +92,7 @@ target_metadata = Base.metadata
 
 ---
 
-## 🚀 8. Run Alembic Migrations
+## 8. Run Alembic Migrations
 
 ```bash
 alembic revision --autogenerate -m "initial migration"
@@ -105,7 +101,7 @@ alembic upgrade head
 
 ---
 
-## 🏁 9. Start the FastAPI Server
+## 9. Start the FastAPI Server
 
 Navigate to the `src/` directory and run:
 
