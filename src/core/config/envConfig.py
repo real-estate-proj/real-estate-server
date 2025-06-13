@@ -1,0 +1,26 @@
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    database_username: str
+    database_password: str
+    database_hostname: str
+    database_portnumber: int
+    database_name: str
+    secret_key: str
+    algorithm: str
+    access_token_exp_time: int
+
+    class Config:
+        env_file = "./src/.env"
+
+settings = Settings()
+
+# this is only for testing the env variable
+if __name__ == "__main__":
+    print("Database username:", settings.database_username)
+    print("Database password:", settings.database_password)
+    print("Hostname:", settings.database_hostname)
+    print("Database name:", settings.database_name)
+    print("Secret key:", settings.secret_key)
+    print("Algorithm:", settings.algorithm)
+    print("Token expiry:", settings.access_token_exp_time)
