@@ -49,53 +49,9 @@ access_token_exp_time=<access-token-expiry-time>
 ```
 
 ---
-
-## 5. Initialize Alembic
-
-```bash
-alembic init migration
-```
-
-This will create a `migration/` directory containing Alembic configuration files.
-
----
-
-## 6. Configure `alembic.ini`
-
-Open `alembic.ini` and clear the default URL line:
-
-```ini
-sqlalchemy.url =
-```
-
->  You can also paste the full DB connection string here if you prefer not to load from the `.env`.
-
----
-
-## 7. Configure `env.py` inside `migration/`
-
-Edit the `env.py` file to load the database connection dynamically and import metadata:
-
-```python
-from src.models import Base
-from src.database.engine import engine
-from core.config.envConfig import settings
-
-# Set DB connection from .env settings
-config.set_main_option(
-    "sqlalchemy.url", f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_portnumber}/{settings.database_name}"
-)
-
-# Use model metadata for Alembic autogenerate
-target_metadata = Base.metadata
-```
-
----
-
 ## 8. Run Alembic Migrations
 
 ```bash
-alembic revision --autogenerate -m "initial migration"
 alembic upgrade head
 ```
 
