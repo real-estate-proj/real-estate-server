@@ -196,5 +196,3 @@ cython_debug/
 # testing file
 src/test
 
-# migration
-migration

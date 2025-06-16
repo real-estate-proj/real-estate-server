@@ -3,6 +3,11 @@ from fastapi import APIRouter, Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRouter
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
+
+
 app = FastAPI (title="RealEstate API")
 
 origins = ["*"]
@@ -15,17 +20,10 @@ app.add_middleware (
     allow_headers=["*"],
 )
 
-sub_app = FastAPI ()
-
-@sub_app.get('/testing')
-def test_sub_app ():
-    return ({"message": "hello world 22222222222"})
-
 @app.get ('/')
 def testingRoute ():
     return ({"message": "hello world"})
 
-app.mount ('/t', sub_app)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

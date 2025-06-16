@@ -1,5 +1,3 @@
-from .utils.resolvePath import resolvePath
-resolvePath ()
 from database.base import Base
 
 from sqlalchemy import Column, BigInteger, Text, TIMESTAMP, ForeignKey, CheckConstraint

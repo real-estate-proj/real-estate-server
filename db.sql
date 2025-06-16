@@ -1,16 +1,3 @@
--- Migrations will appear here as you chat with AI
-
-create table users (
-  id bigint primary key generated always as identity,
-  name text,
-  email text unique,
-  phone text,
-  password_hash text,
-  role text,
-  avatar_url text,
-  created_at timestamp
-);
-
 drop table if exists users cascade;
 
 drop table if exists property_types cascade;

@@ -1,7 +1,7 @@
-import sys
-import os
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
+# import sys
+# import os
+# project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# sys.path.insert(0, project_root)
 
 from sqlalchemy import create_engine
 from core.config.envConfig import settings
