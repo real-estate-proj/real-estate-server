@@ -1,14 +1,12 @@
-from email import message
-from fastapi import APIRouter, Depends, FastAPI, Request
+from fastapi import FastAPI 
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.routing import APIRouter
 
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 # router
-from api.v1.auth import register_router
+from api.v1 import routerV1
 
 app = FastAPI (title="RealEstate API", version="0.1.0")
 
@@ -26,7 +24,7 @@ app.add_middleware (
 def testingRoute ():
     return ({"message": "hello world"})
 
-app.include_router (register_router.route)
+app.include_router (routerV1)
 
 if __name__ == "__main__":
     import uvicorn
