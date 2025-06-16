@@ -7,8 +7,10 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
+# router
+from api.v1.auth import register_router
 
-app = FastAPI (title="RealEstate API")
+app = FastAPI (title="RealEstate API", version="0.1.0")
 
 origins = ["*"]
 
@@ -23,6 +25,8 @@ app.add_middleware (
 @app.get ('/')
 def testingRoute ():
     return ({"message": "hello world"})
+
+app.include_router (register_router.route)
 
 if __name__ == "__main__":
     import uvicorn

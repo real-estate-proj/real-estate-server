@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     access_token_exp_time: int
 
     class Config:
-        env_file = "./src/.env"
+        env_file = ".env"
 
 settings = Settings()
 
