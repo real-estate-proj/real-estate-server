@@ -60,3 +60,11 @@ async def create_new_user(
             created_at=new_user.created_at
         )
     )
+
+
+
+@route.get ('/testing')
+def test ():
+    return {
+        "no content"
+    }

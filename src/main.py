@@ -24,7 +24,7 @@ app.add_middleware (
 def testingRoute ():
     return ({"message": "hello world"})
 
-app.include_router (routerV1)
+app.include_router (routerV1, prefix='/api/v1')
 
 if __name__ == "__main__":
     import uvicorn
