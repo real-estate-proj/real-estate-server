@@ -36,7 +36,8 @@ async def create_new_user(user: RegisterRequestSchema,
             phone=new_user.phone,
             role=new_user.role,
             avatar_url=new_user.avatar_url,
-            created_at=new_user.created_at
+            created_at=new_user.created_at,
+            is_verified=new_user.is_verified
         )
     )
 

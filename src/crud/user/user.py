@@ -14,7 +14,8 @@ def createNewUser  (user: RegisterRequestSchema, database: Session, table=User) 
         password_hash=hashed_pwd,
         role=user.role,
         avatar_url=user.avatar_url,
-        created_at=user.created_at
+        created_at=user.created_at,
+        is_verified = False
     )
     database.add (user)
     database.commit ()

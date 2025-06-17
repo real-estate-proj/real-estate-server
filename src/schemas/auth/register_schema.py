@@ -19,3 +19,4 @@ class RegisterResponseSchema(BaseModel):
     role: Literal['landlord', 'tenant'] 
     avatar_url: str = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    is_verified: bool
