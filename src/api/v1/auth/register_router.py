@@ -8,15 +8,14 @@ from crud.user.user import getUser, createNewUser
 
 
 route = APIRouter(
-    tags=["registration"],
+    tags=["Registration"],
     prefix="/user"
 )
 
 @route.post('/register',
             status_code=status.HTTP_201_CREATED,
             response_model=APIResponse[RegisterResponseSchema])
-async def create_new_user(
-                        user: RegisterRequestSchema,
+async def create_new_user(user: RegisterRequestSchema,
                         database: Session = Depends(init_database)
 ):
     existing_user = getUser({"email": user.email, "phone": user.phone}, database)
@@ -41,7 +40,12 @@ async def create_new_user(
         )
     )
 
-
+@route.post ('/activate',
+             status_code=status.HTTP_202_ACCEPTED)
+async def activate_user (user,
+                         database: Session = Depends (init_database)):
+    pass
+    
 
 @route.get ('/testing')
 def test ():
