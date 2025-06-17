@@ -5,7 +5,7 @@ from schemas.auth.register_schema import RegisterRequestSchema
 from core.security.security import hash_password
 
 
-def createNewUser  (user: RegisterRequestSchema, database: Session, table=User):
+def createNewUser  (user: RegisterRequestSchema, database: Session, table=User) -> Optional[User]:
     hashed_pwd = hash_password (user.password)
     user = User(
         name=user.name,

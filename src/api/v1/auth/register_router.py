@@ -3,7 +3,7 @@ from schemas.auth.register_schema import RegisterRequestSchema, RegisterResponse
 from schemas.response import APIResponse
 from sqlalchemy.orm import Session
 from database.session import init_database
-from models.user import User
+# from models.user import User
 from crud.user.user import getUser, createNewUser
 
 
