@@ -1,6 +1,5 @@
 from database.base import Base
 
-
 from sqlalchemy import Column, BigInteger, Text, String, TIMESTAMP, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
@@ -15,6 +14,7 @@ class User(Base):
     role = Column(Text, nullable=False)
     avatar_url = Column(Text)
     created_at = Column(TIMESTAMP)
+    is_verified = Column (Boolean)
 
 class Admin(Base):
     __tablename__ = "admins"
