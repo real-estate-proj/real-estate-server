@@ -1,7 +1,7 @@
 
 ---
 
-🛠️ FastAPI Project Setup Guide
+🛠️ Project Setup Guide
 ---
 
 ## 1. Initialize the Virtual Environment
