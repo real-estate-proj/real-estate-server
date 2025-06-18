@@ -7,12 +7,12 @@ from database.session import init_database
 from crud.user.user import getUser, createNewUser
 
 
-route = APIRouter(
+router = APIRouter(
     tags=["Registration"],
     prefix="/user"
 )
 
-@route.post('/register',
+@router.post('/register',
             status_code=status.HTTP_201_CREATED,
             response_model=APIResponse[RegisterResponseSchema])
 async def create_new_user(user: RegisterRequestSchema,
@@ -41,14 +41,14 @@ async def create_new_user(user: RegisterRequestSchema,
         )
     )
 
-@route.post ('/activate',
+@router.post ('/verification',
              status_code=status.HTTP_202_ACCEPTED)
 async def activate_user (user,
                          database: Session = Depends (init_database)):
     pass
     
 
-@route.get ('/testing')
+@router.get ('/testing')
 def test ():
     return {
         "no content"

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 
 
-route = APIRouter (
+router = APIRouter (
     tags=["Auth"],
     prefix="/auth"
 )
