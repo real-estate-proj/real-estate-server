@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from database.session import init_database
 # from models.user import User
 from crud.user.user import getUser, createNewUser
+from services.auth.register import register
 
 
 router = APIRouter(
@@ -18,15 +19,11 @@ router = APIRouter(
 async def create_new_user(user: RegisterRequestSchema,
                         database: Session = Depends(init_database)
 ):
-    existing_user = getUser({"email": user.email, "phone": user.phone}, database)
-
-    if existing_user:
-        raise HTTPException(
+    exception = HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email hoặc số điện thoại đã tồn tại."
         )
-
-    new_user =  createNewUser (user, database)
+    new_user = register (user, database, exception)
     return APIResponse(
         status_code=status.HTTP_201_CREATED,
         message="Tạo tài khoản thành công",
