@@ -1,6 +1,6 @@
 from database.base import Base
 
-from sqlalchemy import Column, BigInteger, Text, String, TIMESTAMP, ForeignKey, Boolean
+from sqlalchemy import Column, BigInteger, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer
 from sqlalchemy.orm import relationship
 
 class User(Base):
@@ -31,3 +31,13 @@ class Favorite(Base):
     property_id = Column(BigInteger, ForeignKey("properties.id"), primary_key=True)
 
 
+class EmailVerification(Base):
+    __tablename__ = "email_verifications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False, unique=True)
+    code = Column(String(6), nullable=False)
+    expires_at = Column(TIMESTAMP, nullable=False)
+    is_used = Column (Boolean, nullable=False, default=False)
+
+    user = relationship("User", backref="email_verification")
