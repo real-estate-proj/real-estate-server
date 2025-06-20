@@ -7,7 +7,6 @@ class Location(Base):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     province = Column(Text)
-    district = Column(Text)
     ward = Column(Text)
     street = Column(Text)
 
