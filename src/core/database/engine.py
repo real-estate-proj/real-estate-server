@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from core.config.envConfig import settings
+from core.config.env import settings
 
 DATABASE_URL = "postgresql://{}:{}@{}:{}/{}".format (
     settings.database_username, 

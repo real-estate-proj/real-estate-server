@@ -1,4 +1,4 @@
-from database.base import Base
+from core.database.base import Base
 
 from .user import User, Admin, Favorite
 from .property import Property, PropertyTag, PropertyType, Image, Tag, Report
