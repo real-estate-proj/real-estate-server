@@ -5,6 +5,7 @@ from .property import Property, PropertyTag, PropertyType, Image, Tag, Report
 from .location import Location
 from .chat import Chat, Message
 from .blog import Blog, Comment, Vote, BlogReport, CommentReport
+from .auth import EmailVerification, RevokedToken
 
 __all__ = [
     "User", "Admin", "Favorite", # user
@@ -12,5 +13,7 @@ __all__ = [
     "Report", "BlogReport", "CommentReport", # report
     "Location", # location
     "Chat", "Message", # chat
-    "Blog", "Comment", "Vote" # blog
+    "Blog", "Comment", "Vote", # blog
+    "EmailVerification", "RevokedToken" #auth
+
 ]

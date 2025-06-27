@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from jose import ExpiredSignatureError, jwt, JWTError
 from ..config.env import settings
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from core.database.session import init_database
 from models.user import RevokedToken, User
 import random
@@ -47,7 +48,10 @@ def generate_verification_code(length=6) -> str:
     return ''.join(random.choices(string.digits, k=length))
 
 def is_revoked (token, db: Session):
-    token = db.query (RevokedToken).filter (RevokedToken.access_token == token).first ()
+    token = db.query(RevokedToken).filter(
+        or_(RevokedToken.access_token == token, RevokedToken.refresh_token == token)
+    ).first()
+    
     if not token:
         return False
     return True

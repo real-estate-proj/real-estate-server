@@ -1,0 +1,24 @@
+from core.database.base import Base
+
+from sqlalchemy import Column, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer
+from sqlalchemy.orm import relationship
+
+
+class EmailVerification(Base):
+    __tablename__ = "email_verifications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    email = Column(Text, ForeignKey("users.email"), unique=True)
+    code = Column(String(6), nullable=False)
+    expires_at = Column(TIMESTAMP, nullable=False)
+    is_used = Column (Boolean, nullable=False, default=False)
+
+    user = relationship("User", backref="email_verification")
+
+
+class RevokedToken (Base):
+    __tablename__ = "revoked_token"
+
+    id = Column (Integer, primary_key=True, autoincrement=True)
+    access_token = Column (Text, unique=True, nullable=False)
+    refresh_token = Column (Text, unique=True, nullable=False)

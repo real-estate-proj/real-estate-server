@@ -1,8 +1,6 @@
-from enum import unique
 from core.database.base import Base
 
-from sqlalchemy import Column, BigInteger, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, BigInteger, Text, TIMESTAMP, ForeignKey, Boolean
 
 class User(Base):
     __tablename__ = "users"
@@ -31,22 +29,3 @@ class Favorite(Base):
     user_id = Column(BigInteger, ForeignKey("users.id"), primary_key=True)
     property_id = Column(BigInteger, ForeignKey("properties.id"), primary_key=True)
 
-
-class EmailVerification(Base):
-    __tablename__ = "email_verifications"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    email = Column(Text, ForeignKey("users.email"), unique=True)
-    code = Column(String(6), nullable=False)
-    expires_at = Column(TIMESTAMP, nullable=False)
-    is_used = Column (Boolean, nullable=False, default=False)
-
-    user = relationship("User", backref="email_verification")
-
-
-class RevokedToken (Base):
-    __tablename__ = "revoked_token"
-
-    id = Column (Integer, primary_key=True, autoincrement=True)
-    access_token = Column (Text, unique=True, nullable=False)
-    refresh_token = Column (Text, unique=True, nullable=False)
