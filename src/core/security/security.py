@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import jwt, JWTError
+from jose import ExpiredSignatureError, jwt, JWTError
 from ..config.env import settings
 from sqlalchemy.orm import Session
 from core.database.session import init_database
@@ -10,7 +10,7 @@ from models.user import RevokedToken, User
 import random
 import string
 
-oauth2_scheme = OAuth2PasswordBearer (tokenUrl='/api/v1/auth/login')
+oauth2_scheme = OAuth2PasswordBearer (tokenUrl='api/v1/auth/login/')
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -22,19 +22,24 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now() + timedelta(minutes=settings.access_token_exp_time or 2) 
+    MINUTES = settings.access_token_exp_time
+    expire = datetime.utcnow() + timedelta (minutes=MINUTES)
     to_encode.update({"exp": expire, "type": "access"})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now() + timedelta(days=settings.refresh_token_exp_time or 7)
+    MINUTES = settings.refresh_token_exp_time
+    expire = datetime.utcnow() + timedelta (minutes=MINUTES)
     to_encode.update({"exp": expire, "type": "refresh"})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 def decode_token(token: str) -> dict | None:
     try:
-        return jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        return payload
+    except ExpiredSignatureError:
+        return None
     except JWTError:
         return None
 
@@ -47,8 +52,9 @@ def is_revoked (token, db: Session):
         return False
     return True
 
-def get_current_user  (token: str = Depends (oauth2_scheme), db: Session = Depends (init_database)):
-    payload = decode_token (token=token)
+def get_current_user (token: str = Depends (oauth2_scheme), db: Session = Depends (init_database)):
+    payload = decode_token (token)
+    print (payload)
     if not payload:
         raise HTTPException (
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -61,4 +67,11 @@ def get_current_user  (token: str = Depends (oauth2_scheme), db: Session = Depen
         )
     
     user = db.query (User).filter (User.email == payload["email"]).first ()
+    if not user:
+        raise HTTPException (
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="user not found"
+        )
+    
+    user.pop ("password_hash")
     return user

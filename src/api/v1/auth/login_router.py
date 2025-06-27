@@ -12,7 +12,7 @@ router = APIRouter ()
 
 @router.post ('/login/',
               status_code=status.HTTP_200_OK,
-              response_model=APIResponse[LoginResponseSchema])
+              response_model=LoginResponseSchema)
 async def login (user_credentials: OAuth2PasswordRequestForm = Depends (),
                  database: Session = Depends (init_database)):
     userException = HTTPException (
@@ -27,14 +27,10 @@ async def login (user_credentials: OAuth2PasswordRequestForm = Depends (),
     
     data = loginUser (user_credentials.username, user_credentials.password, database, userException, passwordException)
 
-    return APIResponse(
-        status_code=status.HTTP_200_OK,
-        message="Login successfully",
-        data=LoginResponseSchema(
-            access_token=data["accesstoken"],
-            refresh_token=data["refreshtoken"],
-            token_type='bearer'
-        )   
+    return LoginResponseSchema (
+        access_token=data["accesstoken"],
+        refresh_token=data["refreshtoken"],
+        token_type="bearer"
     )
 
 
@@ -49,7 +45,6 @@ async def refresh_token (token: RefreshTokenRequestShema):
     data = refreshToken (token, exception)
 
     return APIResponse(
-        status_code=status.HTTP_200_OK,
         message="refresh successfully",
         data=AccessTokenResponseSchema(
             access_token=data["accesstoken"],

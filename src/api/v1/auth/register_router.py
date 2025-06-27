@@ -8,7 +8,6 @@ from services.auth.register import register
 router = APIRouter()
 
 @router.post('/register/',
-            status_code=status.HTTP_201_CREATED,
             response_model=APIResponse[RegisterResponseSchema])
 async def create_new_user(user: RegisterRequestSchema,
                         background_tasks: BackgroundTasks,
@@ -20,7 +19,6 @@ async def create_new_user(user: RegisterRequestSchema,
         )
     new_user = register (user, database, exception, background_tasks)
     return APIResponse(
-        status_code=status.HTTP_201_CREATED,
         message="create account successfully, please check the email and verify the account later",
         data=RegisterResponseSchema(
             name=new_user.name,
