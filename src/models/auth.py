@@ -19,6 +19,5 @@ class EmailVerification(Base):
 class RevokedToken (Base):
     __tablename__ = "revoked_token"
 
-    id = Column (Integer, primary_key=True, autoincrement=True)
-    access_token = Column (Text, unique=True, nullable=False)
-    refresh_token = Column (Text, unique=True, nullable=False)
+    access_token = Column (Text, unique=True, nullable=False, primary_key=True)
+    refresh_token = Column (Text, unique=True, nullable=False, primary_key=True)

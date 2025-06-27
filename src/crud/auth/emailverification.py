@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import Optional
-from models.user import EmailVerification
+from models.auth import EmailVerification
 from schemas.auth.email_verification_schema import EmailVerificationRequestSchema
 from core.security.security import generate_verification_code
 from datetime import datetime, timedelta

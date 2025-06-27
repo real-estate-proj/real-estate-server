@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 from jose import ExpiredSignatureError, jwt, JWTError
 from ..config.env import settings
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 from core.database.session import init_database
-from models.user import RevokedToken, User
+from crud.auth.token import is_revoked
+from models.user import User
 import random
 import string
 
@@ -47,24 +47,15 @@ def decode_token(token: str) -> dict | None:
 def generate_verification_code(length=6) -> str:
     return ''.join(random.choices(string.digits, k=length))
 
-def is_revoked (token, db: Session):
-    token = db.query(RevokedToken).filter(
-        or_(RevokedToken.access_token == token, RevokedToken.refresh_token == token)
-    ).first()
-    
-    if not token:
-        return False
-    return True
 
 def get_current_user (token: str = Depends (oauth2_scheme), db: Session = Depends (init_database)):
     payload = decode_token (token)
-    print (payload)
     if not payload:
         raise HTTPException (
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="invalid token"
         )
-    if is_revoked (token, db):
+    if is_revoked (token,"", db):
         raise HTTPException (
             status_code=status.HTTP_403_FORBIDDEN,
             detail="token has been revoked"

@@ -3,6 +3,7 @@ from schemas.auth.register_schema import RegisterRequestSchema, RegisterResponse
 from schemas.response import APIResponse
 from sqlalchemy.orm import Session
 from core.database.session import init_database
+from core.security.security import get_current_user
 from services.auth.register import register
 
 router = APIRouter()
@@ -19,7 +20,7 @@ async def create_new_user(user: RegisterRequestSchema,
         )
     new_user = register (user, database, exception, background_tasks)
     return APIResponse(
-        message="create account successfully, please check the email and verify the account later",
+        message="create account successfully, please check the email and verify the account within 30 minutes since you receives the email",
         data=RegisterResponseSchema(
             name=new_user.name,
             email=new_user.email,
@@ -34,7 +35,7 @@ async def create_new_user(user: RegisterRequestSchema,
 
 @router.post ('/verification/',
              status_code=status.HTTP_202_ACCEPTED)
-async def verify_user (user,
+async def verify_user (user = Depends (get_current_user),
                          database: Session = Depends (init_database)):
     pass
     

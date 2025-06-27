@@ -2,7 +2,7 @@ from crud.user.user import getUser, createNewUser
 from schemas.auth.register_schema import RegisterRequestSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, BackgroundTasks
-from crud.user.emailverification import createNewCode
+from crud.auth.emailverification import createNewCode
 from services.email.sendEmail import sendEmail
 from schemas.email.emailSchema import EmailSchema
 from utils.renderEmailTemplate import render_verification_email
@@ -24,7 +24,6 @@ def send_verification_email_task(email: str, name: str, db: Session):
         asyncio.run(sendEmail(email_data))
     finally:
         db.close()
-
 
 
 def register (user: RegisterRequestSchema, database: Session, exception: HTTPException, background_tasks: BackgroundTasks):

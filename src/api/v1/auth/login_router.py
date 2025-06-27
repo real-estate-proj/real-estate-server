@@ -5,7 +5,8 @@ from schemas.auth.login_schema import LoginResponseSchema, RefreshTokenRequestSh
 from schemas.response import APIResponse
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from services.auth.login import loginUser, refreshToken
-from core.security.security import get_current_user
+from core.security.security import get_current_user, oauth2_scheme
+from crud.auth.token import revoke_token
 
 
 router = APIRouter ()
@@ -55,8 +56,11 @@ async def refresh_token (token: RefreshTokenRequestShema):
 
 @router.post ('/logout/',
               status_code=status.HTTP_200_OK)
-async def logout ():
-    pass
+async def logout (refresh: RefreshTokenRequestShema,
+                    access: str = Depends (oauth2_scheme),
+                    database: Session = Depends (init_database)):
+    revoke_token (access, refresh.refresh_token, database)
+    return {"success"}
 
 
 @router.get ('/protected-router/')
