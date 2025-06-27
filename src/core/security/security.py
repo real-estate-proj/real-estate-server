@@ -73,5 +73,4 @@ def get_current_user (token: str = Depends (oauth2_scheme), db: Session = Depend
             detail="user not found"
         )
     
-    user.pop ("password_hash")
     return user
