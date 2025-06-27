@@ -30,7 +30,18 @@ def getUser(attributes: dict, database: Session, table=User) -> Optional[User]:
             query = query.filter(getattr(table, attr) == value)
 
     return query.first()
-      
+
+
+def updateUserStatus(email: str, newStatus, database: Session):
+    instance = database.query(User).filter(User.email == email).first()
+    
+    if not instance:
+        return None  
+    
+    instance.is_verified = newStatus
+    database.commit()
+    database.refresh(instance)
+    return instance
 
 def updateUser ():
     pass

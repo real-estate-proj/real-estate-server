@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import Optional
 from models.auth import EmailVerification
-from schemas.auth.email_verification_schema import EmailVerificationRequestSchema
 from core.security.security import generate_verification_code
 from datetime import datetime, timedelta
 from core.config.env import settings
@@ -23,7 +22,27 @@ def createNewCode  (email: str,
 def getVerificationCode (email: str,
                         database: Session,
                          table=EmailVerification):
-    emailVerification = database.query (emailVerification).filter (
-        emailVerification.email == email
+    emailVerification = database.query (EmailVerification).filter (
+        EmailVerification.email == email
     ).first ()
     return emailVerification
+
+def updateCodeStatus(email: str, database: Session):
+    instance = database.query(EmailVerification).filter(EmailVerification.email == email).first()
+    
+    if not instance:
+        return None  
+    
+    instance.is_used = True
+    database.commit()
+    database.refresh(instance)
+    return instance
+
+
+def removeExistCode (email, database):
+    rc = database.query (EmailVerification).filter (EmailVerification.email == email).first ()
+    if rc:
+        database.delete (rc)
+        database.commit ()
+        return True
+    return False
