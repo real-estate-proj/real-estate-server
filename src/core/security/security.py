@@ -1,13 +1,16 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from ..config.env import settings
+from sqlalchemy.orm import Session
+from core.database.session import init_database
+from models.user import RevokedToken, User
 import random
 import string
 
-oauth2_scheme = OAuth2PasswordBearer (tokenUrl='auth/login')
+oauth2_scheme = OAuth2PasswordBearer (tokenUrl='/api/v1/auth/login')
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -19,13 +22,13 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now() + timedelta(days=settings.access_token_exp_time | 2) 
+    expire = datetime.now() + timedelta(minutes=settings.access_token_exp_time or 2) 
     to_encode.update({"exp": expire, "type": "access"})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now() + timedelta(days=settings.refresh_token_exp_time | 7)
+    expire = datetime.now() + timedelta(days=settings.refresh_token_exp_time or 7)
     to_encode.update({"exp": expire, "type": "refresh"})
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
@@ -38,17 +41,24 @@ def decode_token(token: str) -> dict | None:
 def generate_verification_code(length=6) -> str:
     return ''.join(random.choices(string.digits, k=length))
 
+def is_revoked (token, db: Session):
+    token = db.query (RevokedToken).filter (RevokedToken.access_token == token).first ()
+    if not token:
+        return False
+    return True
 
-def get_current_user  (token: str = Depends (oauth2_scheme)):
-    user_infor = decode_token (token=token)
-
-if __name__ == "__main__":
-    import os
-    import sys
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-    print (sys.path)
-    token = create_access_token({"name": "minhtuan", "id": 123})
-    print("Access Token:", token)
-
-    refresh = create_refresh_token({"name": "minhtuan", "id": 123})
-    print("Refresh Token:", refresh)
+def get_current_user  (token: str = Depends (oauth2_scheme), db: Session = Depends (init_database)):
+    payload = decode_token (token=token)
+    if not payload:
+        raise HTTPException (
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid token"
+        )
+    if is_revoked (token, db):
+        raise HTTPException (
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="token has been revoked"
+        )
+    
+    user = db.query (User).filter (User.email == payload["email"]).first ()
+    return user

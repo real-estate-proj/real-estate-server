@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from core.database.session import init_database
-from core.security.security import verify_password, create_access_token, create_refresh_token, decode_token
-from schemas.auth.login_schema import LoginResponseSchema, RefreshTokenRequestShema
+from schemas.auth.login_schema import LoginResponseSchema, RefreshTokenRequestShema, AccessTokenResponseSchema
 from schemas.response import APIResponse
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from crud.user.user import getUser
+from services.auth.login import loginUser, refreshToken
+from core.security.security import get_current_user
 
 
 router = APIRouter ()
@@ -15,66 +15,45 @@ router = APIRouter ()
               response_model=APIResponse[LoginResponseSchema])
 async def login (user_credentials: OAuth2PasswordRequestForm = Depends (),
                  database: Session = Depends (init_database)):
-    user  = getUser ({"email": user_credentials.username}, database)
-    if not user:
-        raise HTTPException (
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="invalid credentials"
-        )
-    
-    if not verify_password (user_credentials.password, user.password_hash):
-        raise HTTPException (
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="invalid password"
-        )
-    
-    acessToken = create_access_token ({
-        "id": user.id,
-        "email": user.email,
-        "name": user.name,
-        "role": user.role,
-        "is_verified": user.is_verified
-    })
-
-    refreshToken = create_refresh_token ({
-        "id": user.id,
-        "email": user.email,
-        "name": user.name,
-        "role": user.role,
-        "is_verified": user.is_verified
-    }
-
+    userException = HTTPException (
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="invalid credentials"
     )
+
+    passwordException = HTTPException (
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="invalid password"
+    )
+    
+    data = loginUser (user_credentials.username, user_credentials.password, database, userException, passwordException)
+
     return APIResponse(
-        status_code=status.HTTP_201_CREATED,
+        status_code=status.HTTP_200_OK,
         message="Login successfully",
         data=LoginResponseSchema(
-            access_token=acessToken,
-            refresh_token=refreshToken
+            access_token=data["accesstoken"],
+            refresh_token=data["refreshtoken"],
+            token_type='bearer'
         )   
     )
 
 
 @router.post ('/refresh/',
               status_code=status.HTTP_200_OK,
-              response_model=APIResponse[LoginResponseSchema])
+              response_model=APIResponse[AccessTokenResponseSchema])
 async def refresh_token (token: RefreshTokenRequestShema):
-    user_data = decode_token (token.refresh_token)
-    acessToken = create_access_token ({
-        **user_data
-    })
-
-    refreshToken = create_refresh_token ({
-        **user_data
-    }
-
+    exception = HTTPException (
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="invalid token"
     )
+    data = refreshToken (token, exception)
+
     return APIResponse(
-        status_code=status.HTTP_201_CREATED,
-        message="Refresh successfully",
-        data=LoginResponseSchema(
-            access_token=acessToken,
-            refresh_token=refreshToken
+        status_code=status.HTTP_200_OK,
+        message="refresh successfully",
+        data=AccessTokenResponseSchema(
+            access_token=data["accesstoken"],
+            token_type='bearer'
         )   
     )
 
@@ -83,3 +62,8 @@ async def refresh_token (token: RefreshTokenRequestShema):
               status_code=status.HTTP_200_OK)
 async def logout ():
     pass
+
+
+@router.get ('/protected-router/')
+def get (user = Depends (get_current_user)):
+    return user

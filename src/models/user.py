@@ -1,3 +1,4 @@
+from enum import unique
 from core.database.base import Base
 
 from sqlalchemy import Column, BigInteger, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer
@@ -41,3 +42,11 @@ class EmailVerification(Base):
     is_used = Column (Boolean, nullable=False, default=False)
 
     user = relationship("User", backref="email_verification")
+
+
+class RevokedToken (Base):
+    __tablename__ = "revoked_token"
+
+    id = Column (Integer, primary_key=True, autoincrement=True)
+    access_token = Column (Text, unique=True, nullable=False)
+    refresh_token = Column (Text, unique=True, nullable=False)

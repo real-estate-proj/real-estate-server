@@ -9,7 +9,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 # router
 from api.v1 import routerV1
 
-
 app = FastAPI (title="RealEstate API", version="0.1.0")
 
 origins = ["*"]
