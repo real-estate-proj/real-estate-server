@@ -5,8 +5,8 @@ from schemas.auth.login_schema import LoginResponseSchema, RefreshTokenRequestSh
 from schemas.response import APIResponse
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from services.auth.login import loginUser, refreshToken
+from services.auth.logout import signout
 from core.security.security import get_current_user, oauth2_scheme
-from crud.auth.token import revoke_token
 
 
 router = APIRouter ()
@@ -58,8 +58,23 @@ async def refresh_token (token: RefreshTokenRequestShema):
               status_code=status.HTTP_200_OK)
 async def logout (refresh: RefreshTokenRequestShema,
                     access: str = Depends (oauth2_scheme),
+                    user = Depends (get_current_user),
                     database: Session = Depends (init_database)):
-    revoke_token (access, refresh.refresh_token, database)
+    exception = HTTPException (
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="the request must include either an access token or a refresh token"
+    )
+
+    userException = HTTPException (
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="refresh token is not belong to the current user"
+    )
+
+    tokenException = HTTPException (
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="invalid token"
+    )
+    signout (access, refresh.refresh_token, database, exception, tokenException, userException, user)
     return {"success"}
 
 
