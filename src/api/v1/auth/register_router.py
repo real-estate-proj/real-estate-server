@@ -1,4 +1,3 @@
-from email import message
 from fastapi import APIRouter, HTTPException, Depends, status, BackgroundTasks
 from schemas.auth.register_schema import RegisterRequestSchema, RegisterResponseSchema
 from schemas.auth.email_verification_schema import EmailVerificationRequestSchema, EmailVerificationResonseSchema, VerificationCodeResponseSchema
@@ -21,6 +20,7 @@ async def create_new_user(user: RegisterRequestSchema,
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email or phone number has been used by another user"
         )
+    
     new_user = register (user, database, exception, background_tasks)
     return APIResponse(
         message="create account successfully, please check the email and verify the account within 30 minutes since you receives the email",
@@ -81,10 +81,11 @@ async def getVerificationCode (user = Depends (get_current_user),
                                database: Session = Depends (init_database)):
     email = user.email
     name = user.name
-    await send_verification_email_task (email, name, database)
+    code = await send_verification_email_task (email, name, database)
     return APIResponse (
         message="verfication email has been sent, check your email",
         data=VerificationCodeResponseSchema (
-            email=user.email
+            email=email, 
+            code=code
         )
     )

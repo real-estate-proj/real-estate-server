@@ -1,6 +1,7 @@
+from fastapi import HTTPException, status
 from crud.auth.emailverification import getVerificationCode, updateCodeStatus
 from datetime import datetime
-from crud.auth.emailverification import createNewCode
+from crud.auth.emailverification import createNewCode, removeExistCode
 from crud.user.user import updateUserStatus
 from services.email.sendEmail import sendEmail
 from schemas.email.emailSchema import EmailSchema
@@ -10,6 +11,7 @@ from sqlalchemy.orm import Session
 
 async def send_verification_email_task(email: str, name: str, db: Session):
     try:
+        removeExistCode (email, db)
         email_ver = createNewCode(email, db)
         email_data = EmailSchema(
             email=email,
@@ -20,7 +22,14 @@ async def send_verification_email_task(email: str, name: str, db: Session):
                 expires_at=email_ver.expires_at
             )
         )
-        await sendEmail(email_data)
+        try:
+            await sendEmail(email_data)
+        except Exception as e:
+            raise HTTPException (
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="failed to send the verification email"
+            )
+        return email_ver.code
     finally:
         db.close()
 
