@@ -1,7 +1,7 @@
 
 ---
 
-🛠️ Project Setup Guide
+🛠️ Project Setup Guide config
 ---
 
 ## 1. Initialize the Virtual Environment
