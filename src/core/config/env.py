@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
     MAIL_FROM: str
+    max_attempt_require_code: int
 
     class Config:
         env_file = str(Path(__file__).resolve().parents[2] / ".env")

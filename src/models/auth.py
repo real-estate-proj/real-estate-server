@@ -1,6 +1,6 @@
 from core.database.base import Base
 
-from sqlalchemy import Column, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer
+from sqlalchemy import Column, Text, String, TIMESTAMP, ForeignKey, Boolean, Integer, BigInteger
 from sqlalchemy.orm import relationship
 
 
@@ -21,3 +21,11 @@ class RevokedToken (Base):
 
     access_token = Column (Text, unique=True, nullable=False, primary_key=True)
     refresh_token = Column (Text, unique=True, nullable=False, primary_key=True)
+
+
+class BlackList (Base):
+    __tablename__ = "black_list"
+    
+    id = Column (BigInteger, primary_key=True, autoincrement=True)
+    email = Column (Text, ForeignKey ("users.email"), unique=True)
+    attempts = Column (Integer)
