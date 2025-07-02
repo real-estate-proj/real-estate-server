@@ -19,7 +19,8 @@ async def send_verification_email_task(email: str, name: str, db: Session):
             content=render_verification_email(
                 name=name,
                 code=email_ver.code,
-                expires_at=email_ver.expires_at
+                expires_at=email_ver.expires_at,
+                templateName="verification_email.html"
             )
         )
         try:

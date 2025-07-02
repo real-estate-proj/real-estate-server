@@ -13,7 +13,8 @@ router = APIRouter ()
 
 @router.post ('/login/',
               status_code=status.HTTP_200_OK,
-              response_model=LoginResponseSchema)
+              response_model=LoginResponseSchema,
+              description="Sigining in the user to the app")
 async def login (user_credentials: OAuth2PasswordRequestForm = Depends (),
                  database: Session = Depends (init_database)):
     userException = HTTPException (
@@ -35,7 +36,7 @@ async def login (user_credentials: OAuth2PasswordRequestForm = Depends (),
     )
 
 
-@router.post ('/refresh/',
+@router.post ('/refresh-token/',
               status_code=status.HTTP_200_OK,
               response_model=APIResponse[AccessTokenResponseSchema])
 async def refresh_token (token: RefreshTokenRequestShema):
@@ -76,8 +77,3 @@ async def logout (refresh: RefreshTokenRequestShema,
     )
     signout (access, refresh.refresh_token, database, exception, tokenException, userException, user)
     return {"success"}
-
-
-@router.get ('/protected-router/')
-def get (user = Depends (get_current_user)):
-    return user

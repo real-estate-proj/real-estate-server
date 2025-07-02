@@ -1,6 +1,8 @@
 from fastapi import APIRouter
-from .login_router import router as login_routes
-from .register_router import router as register_routes
+from .authentication_router import router as authentication_routes
+from .registration_router import router as register_routes
+from .emailVerification_router import router as emailVerification_routes
+from .password_router import router as password_routes
 
 authRouter = APIRouter (
     prefix="/auth",
@@ -9,4 +11,6 @@ authRouter = APIRouter (
 
 
 authRouter.include_router (register_routes)
-authRouter.include_router (login_routes)
+authRouter.include_router (authentication_routes)
+authRouter.include_router (emailVerification_routes)
+authRouter.include_router (password_routes)
