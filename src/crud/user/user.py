@@ -43,8 +43,19 @@ def updateUserStatus(email: str, newStatus, database: Session):
     database.refresh(instance)
     return instance
 
-def updateUser ():
-    pass
+def updateUserPassword (email, newpassword, database: Session):
+    user = database.query (User).filter (User.email == email).first ()
+
+    if not user:
+        return None
+    
+    hashpassword = hash_password (newpassword)
+    user.password_hash  = hashpassword
+
+    database.commit ()
+    database.refresh (user)
+    return user
+
 
 def deleteUser ():
     pass

@@ -12,6 +12,6 @@ def register (user: RegisterRequestSchema, database: Session, exception: HTTPExc
     if existing_user:
         raise exception
     new_user =  createNewUser (user, database)
-    background_tasks.add_task(send_verification_email_task, new_user.email, new_user.name, database)
+    background_tasks.add_task(send_verification_email_task, new_user.email, new_user.name, "verification_email.html", database)
 
     return new_user

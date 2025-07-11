@@ -13,6 +13,7 @@ class forgotPasswordResponseSchema (BaseModel):
 class resetPasswordRequestShema (BaseModel):
     email: EmailStr
     code: str
+    new_password: str
 
 class resetPasswordResponseSchema (BaseModel):
     email: EmailStr

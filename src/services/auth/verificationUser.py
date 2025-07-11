@@ -9,7 +9,7 @@ from utils.renderEmailTemplate import render_verification_email
 from sqlalchemy.orm import Session
 
 
-async def send_verification_email_task(email: str, name: str, db: Session):
+async def send_verification_email_task(email: str, name: str, template, db: Session):
     try:
         removeExistCode (email, db)
         email_ver = createNewCode(email, db)
@@ -20,7 +20,7 @@ async def send_verification_email_task(email: str, name: str, db: Session):
                 name=name,
                 code=email_ver.code,
                 expires_at=email_ver.expires_at,
-                templateName="verification_email.html"
+                templateName=template
             )
         )
         try:
