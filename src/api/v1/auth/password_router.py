@@ -2,14 +2,13 @@ from fastapi import APIRouter, HTTPException, status, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from core.database.session import init_database
 from schemas.response import APIResponse
-from core.security.security import get_current_user
 from services.auth.password import getRecoveryCode, resetUserPassword
 
 from schemas.auth.password_schema import forgotPasswordRequestSchema, forgotPasswordResponseSchema, resetPasswordRequestShema, resetPasswordResponseSchema
 router = APIRouter ()
 
 
-@router.post ('/forgot-password/',
+@router.get ('/forgot-password/',
               status_code=status.HTTP_200_OK,
               response_model=APIResponse[forgotPasswordResponseSchema])
 async def forgotPassword (request: forgotPasswordRequestSchema,
