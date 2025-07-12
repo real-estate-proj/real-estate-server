@@ -50,7 +50,7 @@ async def verify_user (req: EmailVerificationRequestSchema,
 @router.get ('/verification-code/',
              status_code=status.HTTP_200_OK,
              response_model=APIResponse[VerificationCodeResponseSchema])
-async def getVerificationCode (user = Depends (get_current_user),
+async def get_verification_code (user = Depends (get_current_user),
                                database: Session = Depends (init_database)):
     email = user.email
     name = user.name

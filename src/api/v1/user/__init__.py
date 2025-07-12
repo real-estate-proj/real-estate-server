@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .me_router import router as me_router
+from .profile_router import router as profile_router
 from .public_router import router as public_router
 
 userRouter = APIRouter (
@@ -8,5 +8,5 @@ userRouter = APIRouter (
 )
 
 
-userRouter.include_router (me_router)
+userRouter.include_router (profile_router)
 userRouter.include_router (public_router)
