@@ -67,3 +67,4 @@ def resetPassword (request: resetPasswordRequestShema,
             email=request.email
         )
     )
+

@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: server
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./src/.env
+    depends_on:
+      - minio
+
+
+  minio:
+    hostname: minio
+    image: "minio/minio"
+    container_name: minio_s3
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    command: [ "server", "/data", "--console-address", ":9001" ]
+    volumes:
+      - ./volumes/minio:/data
+    env_file:
+      - ./src/.env  

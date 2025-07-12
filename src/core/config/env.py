@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     MAIL_PASSWORD: str
     MAIL_FROM: str
     max_attempt_require_code: int
+    MINIO_ROOT_USER:str
+    MINIO_ROOT_PASSWORD:str
+    MINIO_ACCESS_KEY:str
+    MINIO_SECRET_KEY:str
+    MINIO_ENDPOINT:str
+
 
     class Config:
         env_file = str(Path(__file__).resolve().parents[2] / ".env")
