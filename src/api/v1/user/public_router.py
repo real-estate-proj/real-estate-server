@@ -13,6 +13,13 @@ def get_all_user ():
     pass
 
 
+@router.get ('/:id',
+             status_code=status.HTTP_200_OK,
+             response_model=APIResponse)
+def get_user_infor (database: Session = Depends (init_database)):
+    pass
+
+
 @router.get ('/landlords/',
              status_code=status.HTTP_200_OK,
              response_model=APIResponse)
