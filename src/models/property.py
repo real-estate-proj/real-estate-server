@@ -1,21 +1,21 @@
 from core.database.base import Base
 
-from sqlalchemy import Column, BigInteger, Text,  Numeric, Integer, Boolean, TIMESTAMP, ForeignKey, CheckConstraint
+from sqlalchemy import Column, Text,  Numeric, Integer, Boolean, TIMESTAMP, ForeignKey, CheckConstraint
 
 class PropertyType(Base):
     __tablename__ = "property_types"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Text, primary_key=True)
     name = Column(Text)
 
 
 class Property(Base):
     __tablename__ = "properties"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey("users.id"))
-    type_id = Column(BigInteger, ForeignKey("property_types.id"))
-    location_id = Column(BigInteger, ForeignKey("locations.id"))
+    id = Column(Text, primary_key=True)
+    user_id = Column(Text, ForeignKey("users.id"))
+    type_id = Column(Text, ForeignKey("property_types.id"))
+    location_id = Column(Text, ForeignKey("locations.id"))
     title = Column(Text)
     description = Column(Text)
     price = Column(Numeric)
@@ -35,28 +35,28 @@ class Property(Base):
 class Image(Base):
     __tablename__ = "images"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    property_id = Column(BigInteger, ForeignKey("properties.id"))
+    id = Column(Text, primary_key=True)
+    property_id = Column(Text, ForeignKey("properties.id"))
     url = Column(Text)
 
 class Tag(Base):
     __tablename__ = "tags"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Text, primary_key=True)
     name = Column(Text)
 
 class PropertyTag(Base):
     __tablename__ = "property_tags"
 
-    property_id = Column(BigInteger, ForeignKey("properties.id"), primary_key=True)
-    tag_id = Column(BigInteger, ForeignKey("tags.id"), primary_key=True)
+    property_id = Column(Text, ForeignKey("properties.id"), primary_key=True)
+    tag_id = Column(Text, ForeignKey("tags.id"), primary_key=True)
 
 
 class Report(Base):
     __tablename__ = "reports"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    property_id = Column(BigInteger, ForeignKey("properties.id"))
-    reporter_id = Column(BigInteger, ForeignKey("users.id"))
+    id = Column(Text, primary_key=True)
+    property_id = Column(Text, ForeignKey("properties.id"))
+    reporter_id = Column(Text, ForeignKey("users.id"))
     reason = Column(Text)
     created_at = Column(TIMESTAMP)

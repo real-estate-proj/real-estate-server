@@ -5,7 +5,7 @@ from sqlalchemy import Column, BigInteger, Text, TIMESTAMP, ForeignKey, Boolean
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Text, primary_key=True)
     name = Column(Text)
     email = Column(Text, unique=True)
     phone = Column(Text)
@@ -18,14 +18,14 @@ class User(Base):
 class Admin(Base):
     __tablename__ = "admins"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey("users.id"))
+    id = Column(Text, primary_key=True)
+    user_id = Column(Text, ForeignKey("users.id"))
     is_super = Column(Boolean)
 
 
 class Favorite(Base):
     __tablename__ = "favorites"
 
-    user_id = Column(BigInteger, ForeignKey("users.id"), primary_key=True)
-    property_id = Column(BigInteger, ForeignKey("properties.id"), primary_key=True)
+    user_id = Column(Text, ForeignKey("users.id"), primary_key=True)
+    property_id = Column(Text, ForeignKey("properties.id"), primary_key=True)
 

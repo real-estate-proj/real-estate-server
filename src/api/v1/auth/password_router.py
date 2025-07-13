@@ -11,7 +11,7 @@ router = APIRouter ()
 @router.get ('/forgot-password/',
               status_code=status.HTTP_200_OK,
               response_model=APIResponse[forgotPasswordResponseSchema])
-async def forgotPassword (request: forgotPasswordRequestSchema,
+async def forgot_password (request: forgotPasswordRequestSchema,
                           backgroud_tasks: BackgroundTasks,
                           database: Session = Depends (init_database)):
     exception = HTTPException (
@@ -30,7 +30,7 @@ async def forgotPassword (request: forgotPasswordRequestSchema,
 @router.post ('/reset-password/',
               status_code=status.HTTP_200_OK,
               response_model=APIResponse[resetPasswordResponseSchema])
-def resetPassword (request: resetPasswordRequestShema,
+def reset_password (request: resetPasswordRequestShema,
                    database: Session = Depends  (init_database)):
     
     userException = HTTPException (
