@@ -5,7 +5,7 @@ from crud.auth.emailverification import createNewCode, removeExistCode
 from crud.user.user import updateUserStatus
 from services.email.sendEmail import sendEmail
 from schemas.email.emailSchema import EmailSchema
-from utils.renderEmailTemplate import render_verification_email
+from utils.render_email_template import render_verification_email
 from sqlalchemy.orm import Session
 
 
