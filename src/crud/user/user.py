@@ -3,11 +3,14 @@ from typing import Optional
 from models.user import User
 from schemas.auth.register_schema import RegisterRequestSchema
 from core.security.security import hash_password
+from utils.generate_id import generate_id
 
 
 def createNewUser  (user: RegisterRequestSchema, database: Session, table=User) -> Optional[User]:
+    randid = generate_id (user.role, user.name)
     hashed_pwd = hash_password (user.password)
     user = User(
+        id=randid,
         name=user.name,
         email=user.email,
         phone=user.phone,
