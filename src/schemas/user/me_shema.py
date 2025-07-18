@@ -7,6 +7,7 @@ class userInforRequestSchema (BaseModel):
 
 
 class userInforResponseSchema (BaseModel):
+    id:str
     name: str
     email: EmailStr
     phone: str

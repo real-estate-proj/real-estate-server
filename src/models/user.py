@@ -9,6 +9,7 @@ class User(Base):
     name = Column(Text)
     email = Column(Text, unique=True)
     phone = Column(Text)
+    bio = Column (Text, default="No bio provided yet.")
     password_hash = Column(Text)
     role = Column(Text, nullable=False)
     avatar_url = Column(Text)
